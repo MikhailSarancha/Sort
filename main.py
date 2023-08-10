@@ -10,12 +10,12 @@ current_occupancy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 # задаём имена файлам
 file = open("Задача на конкурсный отбор.csv", encoding="utf-8")
-wfiles = [open("1.csv", "w", encoding="utf-8", newline=''), open("2.csv", "w", encoding="utf-8", newline=''),
-          open("3.csv", "w", encoding="utf-8", newline=''),
-          open("4.csv", "w", encoding="utf-8", newline=''), open("5.csv", "w", encoding="utf-8", newline=''),
-          open("6.csv", "w", encoding="utf-8", newline=''), open("7.csv", "w", encoding="utf-8", newline=''),
-          open("8.csv", "w", encoding="utf-8", newline=''),
-          open("9.csv", "w", encoding="utf-8", newline=''), open("10.csv", "w", encoding="utf-8", newline='')]
+wfiles = [open("1.csv", "r+", encoding="utf-8", newline=''), open("2.csv", "r+", encoding="utf-8", newline=''),
+          open("3.csv", "r+", encoding="utf-8", newline=''),
+          open("4.csv", "r+", encoding="utf-8", newline=''), open("5.csv", "r+", encoding="utf-8", newline=''),
+          open("6.csv", "r+", encoding="utf-8", newline=''), open("7.csv", "r+", encoding="utf-8", newline=''),
+          open("8.csv", "r+", encoding="utf-8", newline=''),
+          open("9.csv", "r+", encoding="utf-8", newline=''), open("10.csv", "r+", encoding="utf-8", newline='')]
 
 # работа с csv
 competitorsDB = csv.reader(file, delimiter=",")
@@ -41,14 +41,23 @@ print(last_places)
 #обрабатываем непоступиваших
 for data in questionable:
     priority = int(data[2]) - 1
+    flag1 = False
+    flag2 = False
+    dop = "ПОД ВОПРОСОМ НА ПРОГРАММАХ"
     extra = int(data[3]) - 1 if data[3] != '' else -1
     if int(last_places[priority][1]) == int(data[1]):
-        file_writer = csv.writer(wfiles[priority], delimiter=",")
-        data.append("ПОД ВОПРОСОМ")
-        file_writer.writerow(data)
-    elif int(last_places[extra][1]) == int(data[1]) and (extra != -1):
+        dop += " " + data[2]
+        flag1 = True
+    if int(last_places[extra][1]) == int(data[1]) and (extra != -1):
+        flag2 = True
+        dop += " и " + data[3]
+    if flag1:
         file_writer = csv.writer(wfiles[extra], delimiter=",")
-        data.append("ПОД ВОПРОСОМ")
+        data.append(dop)
+        file_writer.writerow(data)
+    if flag2:
+        file_writer = csv.writer(wfiles[priority], delimiter=",")
+        data.append(dop)
         file_writer.writerow(data)
 
 
