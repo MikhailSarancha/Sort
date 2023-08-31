@@ -5,11 +5,18 @@ file = "Задача на конкурсный отбор.csv"
 questionable = []
 last_places = ['', '', '', '', '', '', '', '', '', '']
 # вместимость программ
-programs_capacity = [40, 50, 80, 80, 50, 50, 40, 40, 20, 50]
+programs_capacity = [40, 40, 90, 80, 40, 40, 50, 40, 30, 40]
 current_occupancy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 # задаём имена файлам
 file = open("Задача на конкурсный отбор.csv", encoding="utf-8")
+
+#чистим файлы
+for i in range(1,10):
+    name = str(i) + ".csv"
+    open(name, 'w').close()
+
+
 wfiles = [open("1.csv", "r+", encoding="utf-8", newline=''), open("2.csv", "r+", encoding="utf-8", newline=''),
           open("3.csv", "r+", encoding="utf-8", newline=''),
           open("4.csv", "r+", encoding="utf-8", newline=''), open("5.csv", "r+", encoding="utf-8", newline=''),
@@ -44,6 +51,7 @@ for data in questionable:
     flag1 = False
     flag2 = False
     dop = "ПОД ВОПРОСОМ НА ПРОГРАММАХ"
+    dopNotPassed = "НЕ ПОСТУПИЛ"
     extra = int(data[3]) - 1 if data[3] != '' else -1
     if int(last_places[priority][1]) == int(data[1]):
         dop += " " + data[2]
@@ -51,14 +59,22 @@ for data in questionable:
     if int(last_places[extra][1]) == int(data[1]) and (extra != -1):
         flag2 = True
         dop += " и " + data[3]
+    if (flag1 == False) and (flag2 == False):
+        file_writer1 = csv.writer(wfiles[extra], delimiter = ",")
+        file_writer2 = csv.writer(wfiles[priority], delimiter = ",")
+        dopNotPassed += "_" + data[2] + "_" + data[3]
+        data.append(dopNotPassed)
+        file_writer1.writerow(data)
+        file_writer2.writerow(data)
     if flag1:
-        file_writer = csv.writer(wfiles[extra], delimiter=",")
-        data.append(dop)
-        file_writer.writerow(data)
-    if flag2:
         file_writer = csv.writer(wfiles[priority], delimiter=",")
         data.append(dop)
         file_writer.writerow(data)
+    if flag2:
+        file_writer = csv.writer(wfiles[extra], delimiter=",")
+        data.append(dop)
+        file_writer.writerow(data)
+
 
 
 #чистим мусор
